@@ -2,15 +2,14 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 from rest_framework.test import APIClient
 from core.models import Post
 from instagram.serializers import PostSerializer,DetailPostSerializer
 import os
-# from django.conf import settings
 import tempfile
 from PIL import Image
+
 POST_URL = reverse('instagram:post-list')
 
 
@@ -36,7 +35,7 @@ def create_post(user, **params):
     post = Post.objects.create(author=user, **defaults)
     return post
 
-class PublicRecipeAPITests(TestCase):
+class PublicPostAPITests(TestCase):
     """Test unauthenticated API request """
     def setUp(self):
         self.clint = APIClient()
@@ -47,7 +46,7 @@ class PublicRecipeAPITests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
-class PrivateRecipeAPITest(TestCase):
+class PrivatePostAPITest(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = create_user(email='abc@example.com',password='abc123')
@@ -121,8 +120,6 @@ class PrivateRecipeAPITest(TestCase):
             
             'description': 'New post description',
           
-            
-            
         }
         url = detail_url(post.id)
         res = self.client.put(url, payload)
