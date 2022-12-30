@@ -10,7 +10,6 @@ from core.models import Comment, Post
 from instagram.serializers import CommentSerializer
 
 
-# COMMENT_URL = reverse('instagram')
 
 
 def create_user(email='user@example.com', password='testpass123'):
