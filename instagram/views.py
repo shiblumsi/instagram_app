@@ -7,18 +7,16 @@ from rest_framework.decorators import action
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    """View for manage post APIs."""
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     
-
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return DetailPostSerializer
         else:
             return super().get_serializer_class()
-
-
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -32,13 +30,11 @@ class PostViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class AddCommentView(generics.CreateAPIView):
+    """View for create comments APIs"""
     serializer_class = CommentSerializer
-
 
     def perform_create(self, serializer):
         post = Post.objects.get(pk=self.kwargs.get('pk'))
@@ -48,9 +44,9 @@ class AddCommentView(generics.CreateAPIView):
             serializer.save(post=post)
             
 class ManageCommentView(generics.RetrieveUpdateDestroyAPIView):
+    """view for manage comment"""
     serializer_class = CommentSerializer
     lookup_url_kwarg = 'comment_id'
-
 
     def get_queryset(self):
         queryset = Comment.objects.all()
@@ -74,15 +70,4 @@ class LikeView(APIView):
             'like': like
         }
         return Response(data)
-
-
-# class GetLikersView(generics.ListAPIView):
-#     serializer_class = AuthorSerializer
-
-#     def get_queryset(self):
-#         post_id = self.kwargs['pk']
-#         queryset = Post.objects.get(
-#             pk=post_id).likes.all()
-#         return queryset
-
 

@@ -56,7 +56,6 @@ class Post(models.Model):
     posted_on = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User,related_name='likers',blank=True, symmetrical=False)
 
-    
 
     def number_of_likes(self):
         if self.likes.count():

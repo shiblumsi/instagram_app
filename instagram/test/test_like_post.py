@@ -8,12 +8,12 @@ from core.models import Post
 
 
 def detail_url(post_id):
+    """Create and return detail_url for a post."""
     return reverse('instagram:like',args=[post_id])
 
 def create_user(**params):
+    """Create and return an user."""
     return get_user_model().objects.create_user(**params)
-
-
 
 
 class PublicLikeAPITests(TestCase):
@@ -21,11 +21,6 @@ class PublicLikeAPITests(TestCase):
     def setUp(self):
         self.clint = APIClient()
 
-
-    # def test_auth_requred(self):
-    #     res = self.clint.get(POST_URL)
-
-    #     self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 class PrivateLikeAPITest(TestCase):
     def setUp(self):
@@ -35,13 +30,11 @@ class PrivateLikeAPITest(TestCase):
 
 
     def test_like_post(self):
+        """Test likes"""
         post = Post.objects.create(author=self.user,description='something')
         url = detail_url(post.id)
         lc = post.number_of_likes()
-        #print('likelcccccccc',lc)
         res = self.client.get(url)
-        #print(res.data)
         lc = post.number_of_likes()
-        #print('likelccccccccccccc',lc)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(lc, 1)
